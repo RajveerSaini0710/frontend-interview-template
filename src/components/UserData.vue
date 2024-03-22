@@ -10,10 +10,7 @@
       Previous
     </button>
     <p>{{ currentPage }}</p>
-    <button
-      @click="nextPage"
-      :disabled="currentPage * pageSize >= posts.length"
-    >
+    <button @click="nextPage" :disabled="currentPage * pageSize >= posts.length">
       Next
     </button>
     {{ posts.length }}
@@ -22,55 +19,43 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
 import axios from "axios";
-
 export default {
-  setup() {
-    const users = ref([]);
-    const posts = ref([]);
-    const currentPage = ref(1);
-    const pageSize = 10;
-
-    const displayedPost = computed(() => {
-      const startIndex = (currentPage.value - 1) * pageSize;
-      const endIndex = currentPage.value * pageSize;
-      return posts.value.slice(startIndex, endIndex);
-    });
-
-    const getUser = (userId) => {
-      return users.value.find((user) => user.id === userId);
-    };
-
-    const nextPage = () => {
-      currentPage.value++;
-      console.log(currentPage.value);
-    };
-
-    const previousPage = () => {
-      currentPage.value--;
-      console.log(currentPage.value);
-    };
-
-    onMounted(() => {
-      axios.get("https://jsonplaceholder.typicode.com/users").then((res) => {
-        users.value = res.data;
-      });
-      axios.get("https://jsonplaceholder.typicode.com/posts").then((res) => {
-        posts.value = res.data;
-      });
-    });
-
+  data() {
     return {
-      users,
-      posts,
-      currentPage,
-      pageSize,
-      displayedPost,
-      getUser,
-      nextPage,
-      previousPage,
+      users: [],
+      posts: [],
+      currentPage: 1,
+      pageSize: 10,
     };
+  },
+  computed: {
+    displayedPost() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = this.currentPage * this.pageSize;
+      return this.posts.slice(startIndex, endIndex);
+    },
+  },
+  mounted() {
+    axios.get("https://jsonplaceholder.typicode.com/users").then((res) => {
+      this.users = res.data;
+    });
+    axios.get("https://jsonplaceholder.typicode.com/posts").then((res) => {
+      this.posts = res.data;
+    });
+  },
+  methods: {
+    getUser(userId) {
+      return this.users.find((user) => user.id === userId);
+    },
+    nextPage() {
+      this.currentPage++;
+      console.log(this.currentPage);
+    },
+    previousPage() {
+      this.currentPage--;
+      console.log(this.currentPage);
+    },
   },
 };
 </script>
