@@ -1,16 +1,23 @@
 <template>
   <section>
     <div v-for="(post, index) in displayedPost" :key="index" class="card">
-      <h1>{{ getUser(post.userId).name }}</h1>
+      <h1>
+        {{ getUser(post.userId).name }}
+      </h1>
       <p>{{ post.title }}</p>
       <p>{{ post.body }}</p>
-      <p>{{ getUser(post.userId).email }}</p>
+      <p>
+        {{ getUser(post.userId).email }}
+      </p>
     </div>
     <button @click="previousPage" :disabled="currentPage === 1">
       Previous
     </button>
     <p>{{ currentPage }}</p>
-    <button @click="nextPage" :disabled="currentPage * pageSize >= posts.length">
+    <button
+      @click="nextPage"
+      :disabled="currentPage * pageSize >= posts.length"
+    >
       Next
     </button>
     {{ posts.length }}
@@ -46,6 +53,7 @@ export default {
   },
   methods: {
     getUser(userId) {
+      // console.log(findUser, "find User", userId, ":user id");
       return this.users.find((user) => user.id === userId);
     },
     nextPage() {
